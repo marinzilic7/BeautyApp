@@ -1,6 +1,6 @@
 from __init__ import Session
 
-
+from proizvodi import Proizvod
 from korisnici import Korisnik
 from __init__ import Base
 from datetime import datetime
@@ -73,6 +73,56 @@ def logout():
     session.pop('user_name', None)
    
     return redirect(url_for('login'))
+
+
+@app.route("/proizvodi")
+def proizvod ():
+    proizvod = Session.query(Proizvod).all()
+    return render_template('proizvod.html', proizvodi=proizvod)
+
+@app.route('/dodaj-proizvod', methods=['POST'])
+def dodaj_proizvod():
+    
+    ime = request.form['ime']
+    opis = request.form['opis']
+    cijena = request.form['cijena']
+   
+    
+    proizvod= Proizvod(ime=ime, opis=opis, cijena=cijena,)
+    Session.add(proizvod)
+    Session.commit()
+    return redirect(url_for('proizvod'))
+
+
+@app.route('/izbrisi_proizvod/<int:ID_proizvoda>', methods=['POST'])
+def izbrisi_proizvod(ID_proizvoda):
+    proizvod = Session.query(Proizvod).get(ID_proizvoda)
+    
+    Session.delete(proizvod)
+    Session.commit()  
+        
+    return redirect(url_for('proizvod'))
+    
+        
+    
+@app.route('/uredi_proizvod/<int:ID_proizvoda>')
+def uredi_proizvod(ID_proizvoda):
+    proizvod = Session.query(Proizvod).get(ID_proizvoda)
+    
+    return render_template('uredi_proizvod.html', proizvod=proizvod) 
+
+@app.route('/update_proizvod/<int:ID_proizvoda>', methods=['POST'])
+def update_proizvod(ID_proizvoda):
+    proizvod = Session.query(Proizvod).get(ID_proizvoda)
+    if proizvod:
+        
+        proizvod.ime = request.form.get('ime')
+        proizvod.opis = request.form.get('opis')
+        proizvod.cijena = request.form.get('cijena')
+      
+        Session.commit()
+  
+    return redirect(url_for('proizvod'))
 
 
 app.debug = True
