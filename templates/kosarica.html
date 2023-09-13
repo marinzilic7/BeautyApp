@@ -44,11 +44,6 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active text-light" aria-current="page" href="#"
-                >Home</a
-              >
-            </li>
-            <li class="nav-item">
               <a
                 class="nav-link active text-light"
                 aria-current="page"
@@ -57,7 +52,26 @@
               >
             </li>
           </ul>
-
+          <div class="me-4">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="currentColor"
+              class="bi bi-bag-fill text-light"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5z"
+              />
+            </svg>
+            <span
+              class="position-absolute translate-middle badge rounded-pill bg-primary"
+            >
+              {{broj}}
+              <span class="visually-hidden">unread messages</span>
+            </span>
+          </div>
           <div class="dropdown">
             {% if 'user_name' in session %}
             <button
@@ -94,6 +108,29 @@
         </div>
       </div>
     </nav>
+    {% for kosa in kosarica %}
+    <div class="card ms-3 mt-3" style="width: 18rem">
+      <div class="card-body" style="background-color: #953356;">
+        {% for proizvod in proizvodi %} {% if proizvod.ID_proizvoda ==
+        kosa.proizvod_id %}
+        <h5 class="card-title text-light">Ime : {{ proizvod.ime }}</h5>
+        <hr class="text-light">
+        <p class="card-text text-light">
+           Opis:  {{proizvod.opis}}
+          </p>
+          <hr class="text-light">
+        <p class="text-light">Cijena : {{proizvod.cijena}} €</p>
+        {% endif %} {% endfor %}
+      
+        <form
+        action="{{ url_for('izbrisi_kosaricu', ID_kosarice=kosa.ID_kosarice) }}"
+        method="POST"
+      >
+        <button class="btn btn-outline-light btn-sm">Izbrisi</button>
+      </form>
+      </div>
+    </div>
+    {% endfor %}
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"

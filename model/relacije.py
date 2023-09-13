@@ -5,6 +5,7 @@ from proizvodi import Proizvod
 from studio import Studio
 from termin import Termin
 from recenzije import Recenzija
+from kosarica import Kosarica
 from __init__ import Base
 from __init__  import engine
 
@@ -12,7 +13,8 @@ from __init__  import engine
 Korisnik.termin = relationship('Termin', back_populates='korisnik')
 Korisnik.recenzija = relationship("Recenzija", back_populates="korisnik")
 Termin.recenzija = relationship("Recenzija", back_populates="termin")
-
+Korisnik.kosarica = relationship('Kosarica', back_populates='korisnik')
+Proizvod.kosarica = relationship('Kosarica', back_populates='proizvod')
 
 Base.metadata.bind = engine
 Base.metadata.create_all(bind=engine)

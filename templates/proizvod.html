@@ -47,20 +47,33 @@
               <a
                 class="nav-link active text-light"
                 aria-current="page"
-                href="/pocetna"
-                >Home</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link active text-light"
-                aria-current="page"
                 href="/proizvodi"
                 >Proizvodi</a
               >
             </li>
           </ul>
-
+          <div class="me-4">
+            <a href="/kosarica">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+                class="bi bi-bag-fill text-light"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5z"
+                />
+              </svg>
+              <span
+                class="position-absolute translate-middle badge rounded-pill bg-primary"
+              >
+                {{broj}}
+                <span class="visually-hidden">unread messages</span>
+              </span></a
+            >
+          </div>
           <div class="dropdown">
             {% if 'user_name' in session %}
             <button
@@ -191,6 +204,17 @@
         </div>
       </div>
     </div>
+    <div class="container d-flex justify-content-center mt-5">
+      {% with messages = get_flashed_messages() %} {% if messages %}
+      <div class="alert alert-info col-lg-4" style="background-color: #953356">
+        <ul>
+          {% for message in messages %}
+          <li class="text-light">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %} {% endwith %}
+    </div>
 
     <!-- Proizvodi -->
     <h3 class="text-center mt-5" style="color: #953356">Lista proizvoda</h3>
@@ -227,12 +251,18 @@
                 <form
                   action="{{ url_for('uredi_proizvod', ID_proizvoda=proizvod.ID_proizvoda) }}"
                 >
-                  <input type="hidden" name="ID_food" />
+                  <input type="hidden" />
                   <button class="btn btn-outline-light btn-sm">Uredi</button>
                 </form>
               </td>
               <td>
-                <button class="btn btn-outline-light btn-sm">Dodaj</button>
+                <form
+                  action="{{ url_for('dodaj_kosarica', ID_proizvoda=proizvod.ID_proizvoda) }}"
+                  method="POST"
+                >
+                  <input type="hidden" />
+                  <button class="btn btn-outline-light btn-sm">Dodaj</button>
+                </form>
               </td>
             </tr>
             {% endfor %}

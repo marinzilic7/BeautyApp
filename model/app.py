@@ -2,6 +2,7 @@ from __init__ import Session
 
 from proizvodi import Proizvod
 from korisnici import Korisnik
+from kosarica import Kosarica
 from __init__ import Base
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
@@ -58,14 +59,12 @@ def log_user():
             session['user_name'] = user.ime
             session['user_id'] = user.ID_korisnika
            
-            return redirect(url_for('home'))
+            return redirect(url_for('proizvod'))
         else:
             flash('Pogrešan e-mail ili lozinka. Molimo pokušajte ponovno.', 'danger')
             return redirect(url_for('login'))
 
-@app.route("/pocetna")
-def home ():
-    return render_template('pocetna.html')
+
 
 @app.route('/logout')
 def logout():
@@ -78,7 +77,10 @@ def logout():
 @app.route("/proizvodi")
 def proizvod ():
     proizvod = Session.query(Proizvod).all()
-    return render_template('proizvod.html', proizvodi=proizvod)
+    korisnik_id = session['user_id']   
+    proizvodi_u_kosarici = Session.query(Kosarica).filter_by(korisnik_id=korisnik_id).all()
+    broj_proizvoda_u_kosarici = len(proizvodi_u_kosarici)
+    return render_template('proizvod.html', proizvodi=proizvod, broj = broj_proizvoda_u_kosarici)
 
 @app.route('/dodaj-proizvod', methods=['POST'])
 def dodaj_proizvod():
@@ -124,6 +126,41 @@ def update_proizvod(ID_proizvoda):
   
     return redirect(url_for('proizvod'))
 
+
+@app.route('/dodaj_kosarica/<int:ID_proizvoda>', methods=['POST'])
+def dodaj_kosarica(ID_proizvoda):
+    
+    korisnik_id = session['user_id']
+    postoji = Session.query(Kosarica).filter_by(proizvod_id=ID_proizvoda, korisnik_id=korisnik_id).first()
+    if postoji:
+        flash('Proizvod je vec dodan u kosaricu')
+        return redirect(url_for('proizvod'))
+    else:
+        korisnik_id = session['user_id']
+        kosarica = Kosarica(proizvod_id=ID_proizvoda, korisnik_id=korisnik_id)
+        Session.add(kosarica)
+        Session.commit()
+    
+    
+    return redirect(url_for('proizvod'))
+    
+@app.route("/kosarica")
+def kosarica ():
+    proizvod = Session.query(Proizvod).all()
+    korisnik_id = session['user_id']   
+    proizvodi_u_kosarici = Session.query(Kosarica).filter_by(korisnik_id=korisnik_id).all()
+    broj_proizvoda_u_kosarici = len(proizvodi_u_kosarici)
+    return render_template('kosarica.html', kosarica=proizvodi_u_kosarici, broj = broj_proizvoda_u_kosarici,proizvodi=proizvod)
+
+
+@app.route('/izbrisi_kosaricu/<int:ID_kosarice>', methods=['POST'])
+def izbrisi_kosaricu(ID_kosarice):
+    kosarica = Session.query(Kosarica).get(ID_kosarice)
+    
+    Session.delete(kosarica)
+    Session.commit()  
+        
+    return redirect(url_for('kosarica'))
 
 app.debug = True
 
