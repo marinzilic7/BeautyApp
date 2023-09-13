@@ -162,6 +162,20 @@ def izbrisi_kosaricu(ID_kosarice):
         
     return redirect(url_for('kosarica'))
 
+
+@app.route("/pretraga-proizvoda", methods=["GET"])
+def pretrazi_proizvode():
+   
+    korisnik_id = session['user_id']   
+    ime_proizvoda = request.args.get("ime_proizvoda")
+    proizvodi_u_kosarici = Session.query(Kosarica).filter_by(korisnik_id=korisnik_id).all()
+    broj_proizvoda_u_kosarici = len(proizvodi_u_kosarici)
+  
+    proizvodi = Session.query(Proizvod).filter(Proizvod.ime.ilike(f"%{ime_proizvoda}%")).all()
+
+   
+    return render_template("rezultati_pretrage.html", proizvodi=proizvodi, broj=broj_proizvoda_u_kosarici)
+
 app.debug = True
 
 if __name__ == '__main__':
