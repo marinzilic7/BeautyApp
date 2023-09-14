@@ -1,0 +1,42 @@
+CREATE TABLE korisnici (
+    ID_korisnika INT AUTO_INCREMENT PRIMARY KEY,
+    ime VARCHAR(50),
+    prezime VARCHAR(50),
+    email VARCHAR(50),
+    password VARCHAR(50)
+);
+
+
+CREATE TABLE studio (
+    ID_studio INT AUTO_INCREMENT PRIMARY KEY,
+    ime VARCHAR(50),
+    adresa VARCHAR(50),
+    kontakt INT
+);
+
+
+CREATE TABLE proizvod (
+    ID_proizvoda INT AUTO_INCREMENT PRIMARY KEY,
+    korisnik_id INT,
+    ime VARCHAR(50),
+    opis VARCHAR(200),
+    cijena INT,
+    FOREIGN KEY (korisnik_id) REFERENCES korisnici(ID_korisnika) ON DELETE CASCADE
+);
+
+CREATE TABLE recenzije (
+    ID_recenzije INT AUTO_INCREMENT PRIMARY KEY,
+    korisnik_id INT,
+    komentar VARCHAR(100),
+    ocjena INT,
+    FOREIGN KEY (korisnik_id) REFERENCES korisnici(ID_korisnika)
+);
+
+
+CREATE TABLE kosarica (
+    ID_kosarice INT AUTO_INCREMENT PRIMARY KEY,
+    korisnik_id INT,
+    proizvod_id INT,
+    FOREIGN KEY (korisnik_id) REFERENCES korisnici(ID_korisnika) ON DELETE CASCADE,
+    FOREIGN KEY (proizvod_id) REFERENCES proizvod(ID_proizvoda) ON DELETE CASCADE
+);
