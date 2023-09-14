@@ -121,7 +121,11 @@
           <hr class="text-light">
         <p class="text-light">Cijena : {{proizvod.cijena}} €</p>
         {% endif %} {% endfor %}
-      
+          <hr class="text-light">
+          {% for korisnik in korisnici %} {% if korisnik.ID_korisnika ==
+            kosa.korisnik_id %}
+          <p class="text-light">Dodao/la : {{korisnik.ime}}</p>
+          {% endif %} {% endfor %}
         <form
         action="{{ url_for('izbrisi_kosaricu', ID_kosarice=kosa.ID_kosarice) }}"
         method="POST"

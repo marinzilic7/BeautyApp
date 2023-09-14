@@ -22,10 +22,10 @@ services:
     image: mysql
     container_name: mysql
     environment:
-      - MYSQL_DATABASE=ednevnik
-      - MYSQL_USER=ednevnik
-      - MYSQL_PASSWORD=csdigital
-      - MYSQL_ROOT_PASSWORD=csdigital
+      - MYSQL_DATABASE=studio
+      - MYSQL_USER=studio
+      - MYSQL_PASSWORD=studio123
+      - MYSQL_ROOT_PASSWORD=studio123
     volumes:
       - mysql:/var/lib/mysql
     networks:

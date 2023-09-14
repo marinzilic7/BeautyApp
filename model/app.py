@@ -85,12 +85,15 @@ def proizvod ():
 @app.route('/dodaj-proizvod', methods=['POST'])
 def dodaj_proizvod():
     
+    korisnik_id = session['user_id']
+
     ime = request.form['ime']
+    korisnik_id = korisnik_id;
     opis = request.form['opis']
     cijena = request.form['cijena']
-   
     
-    proizvod= Proizvod(ime=ime, opis=opis, cijena=cijena,)
+    
+    proizvod= Proizvod(ime=ime, korisnik_id=korisnik_id, opis=opis, cijena=cijena,)
     Session.add(proizvod)
     Session.commit()
     return redirect(url_for('proizvod'))
@@ -133,7 +136,7 @@ def dodaj_kosarica(ID_proizvoda):
     korisnik_id = session['user_id']
     postoji = Session.query(Kosarica).filter_by(proizvod_id=ID_proizvoda, korisnik_id=korisnik_id).first()
     if postoji:
-        flash('Proizvod je vec dodan u kosaricu')
+        
         return redirect(url_for('proizvod'))
     else:
         korisnik_id = session['user_id']
@@ -147,10 +150,11 @@ def dodaj_kosarica(ID_proizvoda):
 @app.route("/kosarica")
 def kosarica ():
     proizvod = Session.query(Proizvod).all()
+    korisnik = Session.query(Korisnik).all()
     korisnik_id = session['user_id']   
     proizvodi_u_kosarici = Session.query(Kosarica).filter_by(korisnik_id=korisnik_id).all()
     broj_proizvoda_u_kosarici = len(proizvodi_u_kosarici)
-    return render_template('kosarica.html', kosarica=proizvodi_u_kosarici, broj = broj_proizvoda_u_kosarici,proizvodi=proizvod)
+    return render_template('kosarica.html', kosarica=proizvodi_u_kosarici, broj = broj_proizvoda_u_kosarici,proizvodi=proizvod, korisnici=korisnik)
 
 
 @app.route('/izbrisi_kosaricu/<int:ID_kosarice>', methods=['POST'])
